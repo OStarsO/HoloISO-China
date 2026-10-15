@@ -12,8 +12,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Update system & install archiso
+      - name: Fix pacman mirror & update system
         run: |
+          # 替换为清华镜像源
+          echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+          # 初始化系统密钥
+          pacman-key --init
+          pacman-key --populate archlinux
+          # 更新系统并安装构建工具
           pacman -Syu --noconfirm archiso
 
       - name: Build ISO
